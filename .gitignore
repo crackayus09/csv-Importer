@@ -1,0 +1,4 @@
+./mysql
+./mysql/*
+./uploads/*
+./user_jsons/*
