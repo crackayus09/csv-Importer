@@ -1,21 +1,28 @@
 <?php
-class CSVParser
+
+class CSVParserModel extends AppModel
 {
     //Properties
     public $csv_content;
     // Methods
+
+    public function __construct()
+    {
+        parent::__construct();
+    }
     public function csv_to_array()
     {
         $csv_lines = explode("\n", file_get_contents($this->file_path));
         $headers = str_getcsv(array_shift($csv_lines));
-        $csv_data = array();
+        $csv_data = [];
         foreach ($csv_lines as $csv_line) {
-            $row = array();
-        
+            if (empty($csv_line)) {
+                continue;
+            }
+            $row = [];
             foreach (str_getcsv($csv_line) as $key => $field) {
                 $row[ $headers[ $key ] ] = $field;
             }
-        
             $csv_data[] = $row;
         }
         $this->csv_content = $csv_data;

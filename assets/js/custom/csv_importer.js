@@ -10,7 +10,7 @@ $(function () {
     formData.append("action", "upload");
 
     $.ajax({
-      url: location.href + "parser",
+      url: location.href + "CSVParse",
       type: "POST",
       data: formData,
       processData: false,
@@ -56,7 +56,7 @@ $(function () {
     var exp_option = $("#csv_export_option").val();
     var json_data = { exp_option, filters };
     var url = $.ajax({
-      url: location.href + "export",
+      url: location.href + "Export",
       type: "POST",
       data: JSON.stringify(json_data),
       contentType: "application/json",
@@ -94,7 +94,7 @@ $(function () {
 
           $.ajax({
             type: "GET",
-            url: location.href + "items",
+            url: location.href + "CSVGrid",
             data: filter,
             dataType: "json",
           }).done(function (response) {

@@ -6,9 +6,26 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\Writer\Pdf\Tcpdf;
 
-class Exporter
+class ExportModel extends AppModel
 {
     // Methods
+    public function __construct($file_name, $filters)
+    {
+        parent::__construct();
+        $json_data = file_get_contents(JSON_PATH . $file_name . ".json");
+        $data_arr = json_decode($json_data, true);
+
+        require_once("Models/CSVParserModel.php");
+        $ob_csv_parser = new CSVParserModel();
+
+        $ob_csv_parser->csv_content = $data_arr;
+        $ob_csv_parser->params = $filters;
+
+        $filtered_content = $ob_csv_parser->csv_filter();
+
+        $this->data = $filtered_content["data"];
+        $this->filtered_count = $filtered_content["itemsCount"];
+    }
     public function exportCsv()
     {
         $data_arr = $this->data;
