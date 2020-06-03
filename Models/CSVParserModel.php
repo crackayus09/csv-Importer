@@ -82,7 +82,7 @@ class CSVParserModel extends AppModel
      * @return string
      */
     private function normalize($s)
-    {// Methods
+    {
         $s = str_replace("\r\n", "\n", $s);
         $s = str_replace("\r", "\n", $s);
         $s = preg_replace("/\n{2,}/", "\n\n", $s);
