@@ -1,16 +1,19 @@
 <?php
 
+/**
+ * Class CSVGridController
+ */
 class CSVGridController extends AppController
 {
     public function __construct()
     {
         parent::__construct();
-        $this->file_name = $this->arr_extract($_SESSION, "file_name");
+        $this->file_name = $this->arrExtract($_SESSION, "file_name");
 
         $get_params = $_GET;
 
-        $page = $this->arr_extract($get_params, "pageIndex", 1);
-        $this->page_size = $this->arr_extract($get_params, "pageSize", 10);
+        $page = $this->arrExtract($get_params, "pageIndex", 1);
+        $this->page_size = $this->arrExtract($get_params, "pageSize", 10);
         
         unset($get_params["pageIndex"]);
         unset($get_params["pageSize"]);
@@ -19,6 +22,10 @@ class CSVGridController extends AppController
 
         $this->start = ($page - 1) * $this->page_size;
     }
+    
+    /**
+     * Used to render the CSV grid
+     */
     public function index()
     {
         if (!empty($this->file_name)) {
@@ -34,7 +41,7 @@ class CSVGridController extends AppController
             $ob_csv_parser->start = $this->start;
             $ob_csv_parser->page_size = $this->page_size;
         
-            $response = $ob_csv_parser->csv_filter();
+            $response = $ob_csv_parser->csvFilter();
         } else {
             $response = [
                 "success" => false,

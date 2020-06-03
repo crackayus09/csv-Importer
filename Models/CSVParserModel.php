@@ -1,16 +1,21 @@
 <?php
 
+/**
+ * class CSVParserModel
+ */
 class CSVParserModel extends AppModel
 {
-    //Properties
-    public $csv_content;
-    // Methods
-
     public function __construct()
     {
         parent::__construct();
     }
-    public function csv_to_array()
+
+    /**
+     * Used to convert CSV file to PHP array
+     *
+     * @return array
+     */
+    public function csvToArray()
     {
         $file_content = file_get_contents($this->file_path);
         $file_content = $this->normalize($file_content);
@@ -30,7 +35,13 @@ class CSVParserModel extends AppModel
         $this->csv_content = $csv_data;
         return $csv_data;
     }
-    public function csv_filter()
+
+    /**
+     * Used to filter filter array and extract selected columns
+     *
+     * return array
+     */
+    public function csvFilter()
     {
         $data_filtered = $this->csv_content;
         $params = $this->params;
@@ -63,8 +74,15 @@ class CSVParserModel extends AppModel
         return ["data" => $data_filtered, "itemsCount" => $t_count];
     }
 
+    /**
+     * Used to normalize CRLF/LF/CR files to LF
+     *
+     * @param string $s
+     *
+     * @return string
+     */
     private function normalize($s)
-    {
+    {// Methods
         $s = str_replace("\r\n", "\n", $s);
         $s = str_replace("\r", "\n", $s);
         $s = preg_replace("/\n{2,}/", "\n\n", $s);

@@ -6,9 +6,11 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\Writer\Pdf\Tcpdf;
 
+/**
+ * Class ExportModel
+ */
 class ExportModel extends AppModel
 {
-    // Methods
     public function __construct($file_name, $filters)
     {
         parent::__construct();
@@ -21,11 +23,17 @@ class ExportModel extends AppModel
         $ob_csv_parser->csv_content = $data_arr;
         $ob_csv_parser->params = $filters;
 
-        $filtered_content = $ob_csv_parser->csv_filter();
+        $filtered_content = $ob_csv_parser->csvFilter();
 
         $this->data = $filtered_content["data"];
         $this->filtered_count = $filtered_content["itemsCount"];
     }
+
+    /**
+     * Used to Export to CSV
+     *
+     * @return string
+     */
     public function exportCsv()
     {
         $data_arr = $this->data;
@@ -42,6 +50,12 @@ class ExportModel extends AppModel
 
         return $file_path;
     }
+
+    /**
+     * Used to Export to PDF
+     *
+     * @return string
+     */
     public function exportPdf()
     {
         $s_sheet = $this->createSpreadSheet();
@@ -50,6 +64,12 @@ class ExportModel extends AppModel
         $writer->save($file_path);
         return $file_path;
     }
+
+    /**
+     * Used to Export to Excel
+     *
+     * @return string
+     */
     public function exportExcel()
     {
         $s_sheet = $this->createSpreadSheet();
@@ -60,6 +80,12 @@ class ExportModel extends AppModel
         $writer->save($file_path);
         return $file_path;
     }
+
+    /**
+     * Used to prepare a Spreadsheet object
+     *
+     * @return Spreadsheet
+     */
     private function createSpreadSheet()
     {
         $data_arr = $this->data;
@@ -80,6 +106,12 @@ class ExportModel extends AppModel
         }
         return $spreadsheet;
     }
+
+    /**
+     * Used to define Row naming prefixes
+     *
+     * @return array
+     */
     private function excelRows()
     {
         $row_format = [];
@@ -88,6 +120,14 @@ class ExportModel extends AppModel
         }
         return $row_format;
     }
+
+    /**
+     * Used to generate random filenames with extension for export
+     *
+     * @param string $format
+     *
+     * @return string
+     */
     private function fileName($format)
     {
         $var_uniq_id = uniqid();

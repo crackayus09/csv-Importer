@@ -1,13 +1,20 @@
 <?php
 
+/**
+ * Class CSVParseController
+ */
 class CSVParseController extends AppController
 {
     public function __construct()
     {
         parent::__construct();
-        $this->post_data = $this->post_data();
-        $this->action = $this->arr_extract($this->post_data, "action");
+        $this->post_data = $this->postData();
+        $this->action = $this->arrExtract($this->post_data, "action");
     }
+
+    /**
+     * Used to upload a CSV file and prepare it
+     */
     public function index()
     {
         if (!empty($this->action) && $this->action === "upload" && !empty($_FILES) && $_FILES["file"]["error"] == 0) {
@@ -27,7 +34,7 @@ class CSVParseController extends AppController
                 move_uploaded_file($_FILES['file']['tmp_name'], $file_folder);
                     
                 $ob_csv_parser->file_path = $file_folder;
-                $csv_array = $ob_csv_parser->csv_to_array();
+                $csv_array = $ob_csv_parser->csvToArray();
             
                 $fp = fopen(JSON_PATH . $file_name . ".json", 'w');
                 fwrite($fp, json_encode($csv_array));
@@ -56,6 +63,10 @@ class CSVParseController extends AppController
         echo json_encode($response);
         exit;
     }
+
+    /**
+     * Used to show contents of previous files
+     */
     public function previous()
     {
         $response = [
@@ -63,7 +74,7 @@ class CSVParseController extends AppController
             "message" => "Invalid Access."
         ];
         if (!empty($this->action) && $this->action === "previous") {
-            $file_name = $this->arr_extract($this->post_data, "file_name");
+            $file_name = $this->arrExtract($this->post_data, "file_name");
             if (!empty($file_name)) {
                 $file_content = file_get_contents(JSON_PATH . $file_name . ".json");
                 if (!empty($file_content)) {

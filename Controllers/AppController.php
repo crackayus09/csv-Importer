@@ -1,6 +1,9 @@
 <?php
 require_once(__DIR__.'/ControllerInterface.php');
 
+/**
+ * Class AppController
+ */
 class AppController implements ControllerInterface
 {
     public function __construct()
@@ -9,7 +12,16 @@ class AppController implements ControllerInterface
         require_once("includes/config.php");
     }
 
-    // we will look at this in the view
+    public function index()
+    {
+    }
+
+    /**
+     * Used to render a view
+     *
+     * @param string $view
+     * @param array $params
+     */
     public function render($view, $params = [])
     {
         ob_start();
@@ -20,15 +32,26 @@ class AppController implements ControllerInterface
         echo $str;
     }
 
-    public function index()
-    {
-    }
-
-    public function arr_extract($arr, $key, $default = "")
+    /**
+     * Used to extract a key from an array
+     *
+     * @param array $arr
+     * @param string $key
+     * @param mixed $default
+     *
+     * @return mixed
+     */
+    public function arrExtract($arr, $key, $default = "")
     {
         return (isset($arr[$key]) && $arr[$key]) ? $arr[$key] : $default;
     }
-    public function post_data()
+
+    /**
+     * Used to get POST data
+     *
+     * @return array
+     */
+    public function postData()
     {
         if (empty($_POST)) {
             $post_data = file_get_contents('php://input');

@@ -1,18 +1,25 @@
 <?php
 
+/**
+ * Class ExportController
+ */
 class ExportController extends AppController
 {
     public function __construct()
     {
         parent::__construct();
 
-        $post_data = $this->post_data();
+        $post_data = $this->postData();
 
-        $this->exp_option = $this->arr_extract($post_data, "exp_option");
-        $this->filters = $this->arr_extract($post_data, "filters", []);
+        $this->exp_option = $this->arrExtract($post_data, "exp_option");
+        $this->filters = $this->arrExtract($post_data, "filters", []);
 
-        $this->file_name = $this->arr_extract($_SESSION, "file_name");
+        $this->file_name = $this->arrExtract($_SESSION, "file_name");
     }
+
+    /**
+     * Used to export content to specific format
+     */
     public function index()
     {
         if (!empty($this->file_name) && !empty($this->exp_option)) {
