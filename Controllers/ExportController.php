@@ -9,10 +9,10 @@ class ExportController extends AppController
         $post_data = file_get_contents('php://input');
         $post_data = json_decode($post_data, true);
 
-        $this->exp_option = (isset($post_data["exp_option"]) && $post_data["exp_option"]) ? $post_data["exp_option"] : "";
-        $this->filters = (isset($post_data["filters"]) && $post_data["filters"]) ? $post_data["filters"] : [];
+        $this->exp_option = $this->arr_extract($post_data, "exp_option");
+        $this->filters = $this->arr_extract($post_data, "filters", []);
 
-        $this->file_name = (isset($_SESSION["file_name"]) && $_SESSION["file_name"]) ? $_SESSION["file_name"] : "";
+        $this->file_name = $this->arr_extract($_SESSION, "file_name");
     }
     public function index()
     {

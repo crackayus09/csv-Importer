@@ -1,7 +1,7 @@
 <?php
 require_once(__DIR__.'/ControllerInterface.php');
 
-class AppController implements ControllerIntreface
+class AppController implements ControllerInterface
 {
     public function __construct()
     {
@@ -17,5 +17,10 @@ class AppController implements ControllerIntreface
 
     public function index()
     {
+    }
+
+    public function arr_extract($arr, $key, $default = "")
+    {
+        return (isset($arr[$key]) && $arr[$key]) ? $arr[$key] : $default;
     }
 }

@@ -5,7 +5,7 @@ class CSVParseController extends AppController
     public function __construct()
     {
         parent::__construct();
-        $this->action = (isset($_POST["action"]) && $_POST["action"]) ? $_POST["action"] : "";
+        $this->action = $this->arr_extract($_POST, "action");
     }
     public function index()
     {
@@ -19,21 +19,21 @@ class CSVParseController extends AppController
             } else {
                 require_once("Models/CSVParserModel.php");
                 $ob_csv_parser = new CSVParserModel();
-            
+
                 $var_uniq_id = uniqid();
                 $file_name = "uploaded_file_" . $var_uniq_id;
                 $file_folder = UPLOAD_PATH . $file_name . ".csv";
                 move_uploaded_file($_FILES['file']['tmp_name'], $file_folder);
-                    
+
                 $ob_csv_parser->file_path = $file_folder;
                 $csv_array = $ob_csv_parser->csv_to_array();
-            
+
                 $fp = fopen(JSON_PATH . $file_name . ".json", 'w');
                 fwrite($fp, json_encode($csv_array));
                 fclose($fp);
-                
+
                 $_SESSION["file_name"] = $file_name;
-            
+
                 $response = [
                     "success" => true,
                     "message" => "Data fetched successfully.",
@@ -47,7 +47,7 @@ class CSVParseController extends AppController
                 "message" => "Invalid Access."
             ];
         }
-        
+
         echo json_encode($response);
         exit;
     }
