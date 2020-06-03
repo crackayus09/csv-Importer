@@ -1,3 +1,5 @@
+<?php
+?>
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
   <head>
@@ -97,7 +99,22 @@
             </div>
           </form>
         </div>
-        <div class="col-sm-3"></div>
+        <div class="col-sm-3">
+          <h4>Previous Files:</h4>
+          <ul id="previous_file_list">
+            <?php
+              if (count($previous_files) > 0) {
+                  foreach ($previous_files as $previous_file) {
+                      echo '<li><a href="javascript:void(0);" onclick="showPreviousFile(\'' .
+                          $previous_file["actual_name"] .
+                          '\'); return false;">' .
+                          $previous_file["user_file_name"] .
+                          '</a></li>';
+                  }
+              }
+            ?>
+          </ul>
+        </div>
       </div>
       <div class="row mt-2">
         <div class="col-sm-1"></div>

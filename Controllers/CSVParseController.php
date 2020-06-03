@@ -5,7 +5,8 @@ class CSVParseController extends AppController
     public function __construct()
     {
         parent::__construct();
-        $this->action = $this->arr_extract($_POST, "action");
+        $this->post_data = $this->post_data();
+        $this->action = $this->arr_extract($this->post_data, "action");
     }
     public function index()
     {
@@ -19,26 +20,30 @@ class CSVParseController extends AppController
             } else {
                 require_once("Models/CSVParserModel.php");
                 $ob_csv_parser = new CSVParserModel();
-
+            
                 $var_uniq_id = uniqid();
                 $file_name = "uploaded_file_" . $var_uniq_id;
                 $file_folder = UPLOAD_PATH . $file_name . ".csv";
                 move_uploaded_file($_FILES['file']['tmp_name'], $file_folder);
-
+                    
                 $ob_csv_parser->file_path = $file_folder;
                 $csv_array = $ob_csv_parser->csv_to_array();
-
+            
                 $fp = fopen(JSON_PATH . $file_name . ".json", 'w');
                 fwrite($fp, json_encode($csv_array));
                 fclose($fp);
-
+                
                 $_SESSION["file_name"] = $file_name;
-
+                $_SESSION["previous_files"][] = [
+                    "user_file_name" => $_FILES["file"]["name"],
+                    "actual_name" => $file_name
+                ];
+            
                 $response = [
                     "success" => true,
                     "message" => "Data fetched successfully.",
                     "headers" => array_keys($csv_array[0]),
-                    "body" => $csv_array
+                    "previous_files" => $_SESSION["previous_files"]
                 ];
             }
         } else {
@@ -47,7 +52,32 @@ class CSVParseController extends AppController
                 "message" => "Invalid Access."
             ];
         }
-
+        
+        echo json_encode($response);
+        exit;
+    }
+    public function previous()
+    {
+        $response = [
+            "success" => false,
+            "message" => "Invalid Access."
+        ];
+        if (!empty($this->action) && $this->action === "previous") {
+            $file_name = $this->arr_extract($this->post_data, "file_name");
+            if (!empty($file_name)) {
+                $file_content = file_get_contents(JSON_PATH . $file_name . ".json");
+                if (!empty($file_content)) {
+                    $_SESSION["file_name"] = $file_name;
+                    $file_arr = json_decode($file_content, true);
+                    $response = [
+                        "success" => true,
+                        "message" => "Data fetched successfully.",
+                        "headers" => array_keys($file_arr[0])
+                    ];
+                }
+            }
+        }
+        
         echo json_encode($response);
         exit;
     }

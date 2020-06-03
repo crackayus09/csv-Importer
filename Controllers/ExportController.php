@@ -6,8 +6,7 @@ class ExportController extends AppController
     {
         parent::__construct();
 
-        $post_data = file_get_contents('php://input');
-        $post_data = json_decode($post_data, true);
+        $post_data = $this->post_data();
 
         $this->exp_option = $this->arr_extract($post_data, "exp_option");
         $this->filters = $this->arr_extract($post_data, "filters", []);

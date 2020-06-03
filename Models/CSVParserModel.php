@@ -12,7 +12,9 @@ class CSVParserModel extends AppModel
     }
     public function csv_to_array()
     {
-        $csv_lines = explode("\n", file_get_contents($this->file_path));
+        $file_content = file_get_contents($this->file_path);
+        $file_content = $this->normalize($file_content);
+        $csv_lines = explode("\n", $file_content);
         $headers = str_getcsv(array_shift($csv_lines));
         $csv_data = [];
         foreach ($csv_lines as $csv_line) {
@@ -59,5 +61,13 @@ class CSVParserModel extends AppModel
             $data_filtered
         );
         return ["data" => $data_filtered, "itemsCount" => $t_count];
+    }
+
+    private function normalize($s)
+    {
+        $s = str_replace("\r\n", "\n", $s);
+        $s = str_replace("\r", "\n", $s);
+        $s = preg_replace("/\n{2,}/", "\n\n", $s);
+        return $s;
     }
 }

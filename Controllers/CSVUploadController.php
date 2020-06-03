@@ -8,6 +8,7 @@ class CSVUploadController extends AppController
     }
     public function index()
     {
-        $this->render("csv_uploader");
+        $previous_files = $this->arr_extract($_SESSION, "previous_files", []);
+        $this->render("csv_uploader", ["previous_files" => $previous_files]);
     }
 }
