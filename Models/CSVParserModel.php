@@ -17,7 +17,7 @@ class CSVParserModel extends AppModel
      */
     public function csvToArray()
     {
-        $file_content = file_get_contents($this->file_path);
+        $file_content = file_get_contents($this->filePath);
         $file_content = $this->normalize($file_content);
         $csv_lines = explode("\n", $file_content);
         $headers = str_getcsv(array_shift($csv_lines));
@@ -32,7 +32,7 @@ class CSVParserModel extends AppModel
             }
             $csv_data[] = $row;
         }
-        $this->csv_content = $csv_data;
+        $this->csvContent = $csv_data;
         return $csv_data;
     }
 
@@ -43,7 +43,7 @@ class CSVParserModel extends AppModel
      */
     public function csvFilter()
     {
-        $data_filtered = $this->csv_content;
+        $data_filtered = $this->csvContent;
         $params = $this->params;
 
         foreach ($params as $key => $param) {
@@ -56,8 +56,8 @@ class CSVParserModel extends AppModel
 
         $t_count = count($data_filtered);
 
-        if (isset($this->start) && isset($this->page_size)) {
-            $data_filtered = array_slice($data_filtered, $this->start, $this->page_size);
+        if (isset($this->start) && isset($this->pageSize)) {
+            $data_filtered = array_slice($data_filtered, $this->start, $this->pageSize);
         }
         $data_filtered = array_values($data_filtered);
         $data_filtered = array_map(
@@ -82,7 +82,7 @@ class CSVParserModel extends AppModel
      * @return string
      */
     private function normalize($s)
-    {
+    {// Methods
         $s = str_replace("\r\n", "\n", $s);
         $s = str_replace("\r", "\n", $s);
         $s = preg_replace("/\n{2,}/", "\n\n", $s);

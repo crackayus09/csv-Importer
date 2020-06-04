@@ -11,10 +11,10 @@ class ExportController extends AppController
 
         $post_data = $this->postData();
 
-        $this->exp_option = $this->arrExtract($post_data, "exp_option");
+        $this->expOption = $this->arrExtract($post_data, "exp_option");
         $this->filters = $this->arrExtract($post_data, "filters", []);
 
-        $this->file_name = $this->arrExtract($_SESSION, "file_name");
+        $this->fileName = $this->arrExtract($_SESSION, "file_name");
     }
 
     /**
@@ -22,12 +22,12 @@ class ExportController extends AppController
      */
     public function index()
     {
-        if (!empty($this->file_name) && !empty($this->exp_option)) {
+        if (!empty($this->fileName) && !empty($this->expOption)) {
             require_once("Models/ExportModel.php");
-            $ob_exporter = new ExportModel($this->file_name, $this->filters);
+            $ob_exporter = new ExportModel($this->fileName, $this->filters);
 
-            if ($ob_exporter->filtered_count > 0) {
-                switch ($this->exp_option) {
+            if ($ob_exporter->filteredCount > 0) {
+                switch ($this->expOption) {
                     case 'pdf':
                         $export_file = $ob_exporter->exportPdf();
                         break;

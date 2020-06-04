@@ -8,8 +8,8 @@ class CSVParseController extends AppController
     public function __construct()
     {
         parent::__construct();
-        $this->post_data = $this->postData();
-        $this->action = $this->arrExtract($this->post_data, "action");
+        $this->postDataArr = $this->postData();
+        $this->action = $this->arrExtract($this->postDataArr, "action");
     }
 
     /**
@@ -27,25 +27,25 @@ class CSVParseController extends AppController
             } else {
                 require_once("Models/CSVParserModel.php");
                 $ob_csv_parser = new CSVParserModel();
-            
+
                 $var_uniq_id = uniqid();
                 $file_name = "uploaded_file_" . $var_uniq_id;
                 $file_folder = UPLOAD_PATH . $file_name . ".csv";
                 move_uploaded_file($_FILES['file']['tmp_name'], $file_folder);
-                    
-                $ob_csv_parser->file_path = $file_folder;
+
+                $ob_csv_parser->filePath = $file_folder;
                 $csv_array = $ob_csv_parser->csvToArray();
-            
+
                 $fp = fopen(JSON_PATH . $file_name . ".json", 'w');
                 fwrite($fp, json_encode($csv_array));
                 fclose($fp);
-                
+
                 $_SESSION["file_name"] = $file_name;
                 $_SESSION["previous_files"][] = [
                     "user_file_name" => $_FILES["file"]["name"],
                     "actual_name" => $file_name
                 ];
-            
+
                 $response = [
                     "success" => true,
                     "message" => "Data fetched successfully.",
@@ -59,7 +59,7 @@ class CSVParseController extends AppController
                 "message" => "Invalid Access."
             ];
         }
-        
+
         echo json_encode($response);
         exit;
     }
@@ -74,7 +74,7 @@ class CSVParseController extends AppController
             "message" => "Invalid Access."
         ];
         if (!empty($this->action) && $this->action === "previous") {
-            $file_name = $this->arrExtract($this->post_data, "file_name");
+            $file_name = $this->arrExtract($this->postDataArr, "file_name");
             if (!empty($file_name)) {
                 $file_content = file_get_contents(JSON_PATH . $file_name . ".json");
                 if (!empty($file_content)) {
@@ -88,7 +88,7 @@ class CSVParseController extends AppController
                 }
             }
         }
-        
+
         echo json_encode($response);
         exit;
     }

@@ -20,13 +20,13 @@ class ExportModel extends AppModel
         require_once("Models/CSVParserModel.php");
         $ob_csv_parser = new CSVParserModel();
 
-        $ob_csv_parser->csv_content = $data_arr;
+        $ob_csv_parser->csvContent = $data_arr;
         $ob_csv_parser->params = $filters;
 
         $filtered_content = $ob_csv_parser->csvFilter();
 
         $this->data = $filtered_content["data"];
-        $this->filtered_count = $filtered_content["itemsCount"];
+        $this->filteredCount = $filtered_content["itemsCount"];
     }
 
     /**
@@ -95,7 +95,7 @@ class ExportModel extends AppModel
 
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
-        
+
         for ($index = 0; $index < count($headers); $index++) {
             $sheet->setCellValue($row_prefixs[$index] . '1', $headers[$index]);
         }
